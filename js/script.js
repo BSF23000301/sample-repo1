@@ -1,4 +1,4 @@
-// Contact Manager - stores contacts in localStorage
+//  Contact Manager - stores contacts in localStorage
 let contacts = [];
 
 function loadContacts() {
