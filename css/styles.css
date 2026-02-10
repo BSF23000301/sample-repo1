@@ -1,0 +1,14 @@
+body {
+  background: #f8f9fa;
+}
+.card-title {
+  margin-bottom: 1rem;
+}
+.table td, .table th {
+  vertical-align: middle;
+}
+.no-contacts {
+  text-align: center;
+  color: #6c757d;
+  padding: 1rem 0;
+}
