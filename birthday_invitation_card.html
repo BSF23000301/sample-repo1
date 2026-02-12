@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Invitation Card</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .form-section {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-section h2 {
+            color: #667eea;
+            margin-bottom: 25px;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .color-picker-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .color-option {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.selected {
+            border-color: #333;
+            box-shadow: 0 0 0 2px white, 0 0 0 4px #333;
+        }
+
+        .btn-generate {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-generate:active {
+            transform: translateY(0);
+        }
+
+        /* Card Section */
+        .card-section {
+            perspective: 1000px;
+        }
+
+        .invitation-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 50px 40px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            transition: all 0.3s ease;
+        }
+
+        .invitation-card.color-1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .invitation-card.color-2 {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .invitation-card.color-3 {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .invitation-card.color-4 {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .invitation-card.color-5 {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .confetti {
+            position: absolute;
+            pointer-events: none;
+            font-size: 24px;
+            opacity: 0.7;
+        }
+
+        .card-header {
+            position: relative;
+            z-index: 2;
+            margin-bottom: 30px;
+        }
+
+        .birthday-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+            display: inline-block;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .card-title {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 2;
+            margin: 20px 0;
+        }
+
+        .card-person-name {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-details {
+            font-size: 14px;
+            line-height: 1.8;
+            margin: 15px 0;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 8px 0;
+            font-size: 15px;
+        }
+
+        .detail-icon {
+            font-size: 18px;
+        }
+
+        .card-message {
+            font-size: 16px;
+            font-style: italic;
+            margin: 20px 0;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        .card-footer {
+            position: relative;
+            z-index: 2;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px dashed rgba(255, 255, 255, 0.5);
+        }
+
+        .rsvp-info {
+            font-size: 13px;
+            opacity: 0.85;
+        }
+
+        /* Decorative elements */
+        .decoration {
+            position: absolute;
+            opacity: 0.15;
+            font-size: 100px;
+            pointer-events: none;
+        }
+
+        .decoration-top-left {
+            top: -20px;
+            left: -20px;
+        }
+
+        .decoration-bottom-right {
+            bottom: -20px;
+            right: -20px;
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .form-section {
+                display: none;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .invitation-card {
+                padding: 30px 20px;
+            }
+
+            .card-title {
+                font-size: 36px;
+            }
+
+            .birthday-icon {
+                font-size: 48px;
+            }
+
+            .card-person-name {
+                font-size: 24px;
+            }
+        }
+
+        .btn-print {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-print:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Form Section -->
+        <div class="form-section">
+            <h2><i class="fas fa-edit"></i> Customize Your Invitation</h2>
+
+            <div class="form-group">
+                <label for="guestName">Guest's Name</label>
+                <input 
+                    type="text" 
+                    id="guestName" 
+                    placeholder="Enter guest name" 
+                    value="Alex Johnson"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="celebrantName">Birthday Person's Name</label>
+                <input 
+                    type="text" 
+                    id="celebrantName" 
+                    placeholder="Enter birthday person's name" 
+                    value="Sidra"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input 
+                    type="number" 
+                    id="age" 
+                    placeholder="Enter age" 
+                    value="20"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="date">Date & Time</label>
+                <input 
+                    type="datetime-local" 
+                    id="date" 
+                    value="2026-03-18T18:00"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input 
+                    type="text" 
+                    id="location" 
+                    placeholder="Enter venue address" 
+                    value="Grand Hotel Ballroom, Downtown"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="phone">RSVP Phone Number</label>
+                <input 
+                    type="tel" 
+                    id="phone" 
+                    placeholder="Enter contact number" 
+                    value="+1(555) 123-4567"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="message">Special Message</label>
+                <textarea 
+                    id="message" 
+                    placeholder="Enter a special message for the invitation"
+                >Join us for a wonderful celebration filled with joy, laughter, and unforgettable memories!</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Card Color Theme</label>
+                <div class="color-picker-group">
+                    <div class="color-option color-1 selected" data-color="color-1"></div>
+                    <div class="color-option color-2" data-color="color-2"></div>
+                    <div class="color-option color-3" data-color="color-3"></div>
+                    <div class="color-option color-4" data-color="color-4"></div>
+                    <div class="color-option color-5" data-color="color-5"></div>
+                </div>
+            </div>
+
+            <button class="btn-generate" onclick="generateCard()">
+                <i class="fas fa-magic"></i> Generate Card
+            </button>
+
+            <button class="btn-print" onclick="printCard()">
+                <i class="fas fa-print"></i> Print Card
+            </button>
+        </div>
+
+        <!-- Card Preview Section -->
+        <div class="card-section">
+            <div class="invitation-card color-1" id="invitationCard">
+                <!-- Decorative elements -->
+                <div class="decoration decoration-top-left">🎂</div>
+                <div class="decoration decoration-bottom-right">🎉</div>
+
+                <!-- Card Header -->
+                <div class="card-header">
+                    <div class="birthday-icon">🎉</div>
+                    <div class="card-title">You're Invited!</div>
+                    <div class="card-subtitle">To a Birthday Celebration</div>
+                </div>
+
+                <!-- Card Content -->
+                <div class="card-content">
+                    <div class="card-person-name" id="cardCelebrant">Sarah</div>
+
+                    <div class="card-details">
+                        <div class="detail-item">
+                            <span class="detail-icon">🎂</span>
+                            <span>Turning <strong id="cardAge">25</strong> Years Old</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-icon">📅</span>
+                            <span id="cardDate">Sunday, March 15, 2026 at 6:00 PM</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-icon">📍</span>
+                            <span id="cardLocation">Grand Hotel Ballroom, Downtown</span>
+                        </div>
+                    </div>
+
+                    <div class="card-message" id="cardMessage">
+                        Join us for a wonderful celebration filled with joy, laughter, and unforgettable memories!
+                    </div>
+                </div>
+
+                <!-- Card Footer -->
+                <div class="card-footer">
+                    <div class="rsvp-info">
+                        <strong>📞 Please RSVP:</strong><br>
+                        <span id="cardPhone">+1(555) 123-4567</span><br>
+                        <small>by March 10, 2026</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Color selection
+        document.querySelectorAll('.color-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                
+                const card = document.getElementById('invitationCard');
+                card.className = 'invitation-card ' + this.dataset.color;
+            });
+        });
+
+        // Generate Card
+        function generateCard() {
+            const celebrantName = document.getElementById('celebrantName').value || 'Sarah';
+            const age = document.getElementById('age').value || '25';
+            const date = document.getElementById('date').value || '2026-03-15T18:00';
+            const location = document.getElementById('location').value || 'Grand Hotel';
+            const message = document.getElementById('message').value || 'Join us for a celebration!';
+            const phone = document.getElementById('phone').value || '+1(555) 123-4567';
+
+            // Format date
+            const dateObj = new Date(date);
+            const formattedDate = dateObj.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            }) + ' at ' + dateObj.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            // Update card
+            document.getElementById('cardCelebrant').textContent = celebrantName;
+            document.getElementById('cardAge').textContent = age;
+            document.getElementById('cardDate').textContent = formattedDate;
+            document.getElementById('cardLocation').textContent = location;
+            document.getElementById('cardMessage').textContent = message;
+            document.getElementById('cardPhone').textContent = phone;
+
+            // Add animation
+            const card = document.getElementById('invitationCard');
+            card.style.animation = 'none';
+            setTimeout(() => {
+                card.style.animation = 'bounce 0.6s ease';
+            }, 10);
+        }
+
+        // Print Card
+        function printCard() {
+            window.print();
+        }
+
+        // Initial card generation
+        generateCard();
+
+        // Real-time updates
+        document.getElementById('celebrantName').addEventListener('input', generateCard);
+        document.getElementById('age').addEventListener('input', generateCard);
+        document.getElementById('date').addEventListener('change', generateCard);
+        document.getElementById('location').addEventListener('input', generateCard);
+        document.getElementById('message').addEventListener('input', generateCard);
+        document.getElementById('phone').addEventListener('input', generateCard);
+    </script>
+</body>
+</html>
