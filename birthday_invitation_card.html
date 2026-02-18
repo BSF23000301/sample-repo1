@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Invitation Designer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8B6F47;
+            --secondary: #C4A576;
+            --dark: #2D2A26;
+            --cream: #FAF8F3;
+            --accent: #A8895C;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background: linear-gradient(135deg, #2D2A26 0%, #3E3833 100%);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            color: var(--cream);
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 42px;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.8;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        /* Main Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        /* Left Panel - Controls */
+        .control-panel {
+            background: var(--cream);
+            padding: 40px 35px;
+            height: fit-content;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .panel-section {
+            margin-bottom: 30px;
+        }
+
+        .panel-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: var(--primary);
+            border-bottom: 1px solid var(--secondary);
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            color: var(--dark);
+            opacity: 0.7;
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            background: white;
+            font-family: 'Crimson Text', serif;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: 'Lato', sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Theme Selector */
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .theme-swatch {
+            aspect-ratio: 1;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .theme-swatch:hover {
+            transform: scale(1.1);
+        }
+
+        .theme-swatch.active {
+            border-color: var(--dark);
+        }
+
+        .theme-swatch.active::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        /* Button */
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: var(--dark);
+        }
+
+        /* Card Display */
+        .card-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .invitation-card {
+            width: 100%;
+            max-width: 600px;
+            aspect-ratio: 5/7;
+            background: var(--cream);
+            box-shadow: 
+                0 30px 90px rgba(0, 0, 0, 0.6),
+                0 10px 30px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 50px;
+            position: relative;
+            text-align: center;
+        }
+
+        /* Card Border */
+        .card-border {
+            position: absolute;
+            inset: 30px;
+            border: 1px solid var(--primary);
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        /* Card Content */
+        .card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-ornament {
+            width: 60px;
+            height: 1px;
+            background: var(--primary);
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .card-ornament::before,
+        .card-ornament::after {
+            content: '◆';
+            position: absolute;
+            top: -6px;
+            font-size: 10px;
+            color: var(--primary);
+        }
+
+        .card-ornament::before { left: -15px; }
+        .card-ornament::after { right: -15px; }
+
+        .card-pre-title {
+            font-family: 'Lato', sans-serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        .card-name {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 52px;
+            margin-bottom: 10px;
+            color: var(--primary);
+            line-height: 1.2;
+        }
+
+        .card-age {
+            font-family: 'Crimson Text', serif;
+            font-size: 24px;
+            font-style: italic;
+            margin-bottom: 35px;
+        }
+
+        .card-details {
+            margin: 30px 0;
+        }
+
+        .card-detail {
+            margin: 15px 0;
+            font-family: 'Crimson Text', serif;
+            font-size: 16px;
+        }
+
+        .card-detail-label {
+            font-family: 'Lato', sans-serif;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: block;
+            margin-bottom: 5px;
+            opacity: 0.6;
+        }
+
+        .card-message {
+            font-family: 'Crimson Text', serif;
+            font-size: 15px;
+            line-height: 1.8;
+            margin: 30px 0;
+            font-style: italic;
+            max-width: 400px;
+        }
+
+        .card-rsvp {
+            margin-top: 35px;
+            padding-top: 25px;
+            border-top: 1px solid var(--primary);
+            opacity: 0.4;
+        }
+
+        .card-rsvp-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .card-rsvp-value {
+            font-family: 'Crimson Text', serif;
+            font-size: 15px;
+        }
+
+        /* Theme Colors */
+        .theme-gold { background: linear-gradient(135deg, #C4A576, #D4B896); }
+        .theme-navy { background: linear-gradient(135deg, #2C3E50, #34495E); }
+        .theme-rose { background: linear-gradient(135deg, #C98686, #E5A8A8); }
+        .theme-sage { background: linear-gradient(135deg, #87A878, #A5C99A); }
+        .theme-burgundy { background: linear-gradient(135deg, #8B4049, #A05761); }
+        .theme-teal { background: linear-gradient(135deg, #4A7C7E, #6B9FA1); }
+        .theme-lavender { background: linear-gradient(135deg, #9B8FB5, #BDB3D3); }
+        .theme-terracotta { background: linear-gradient(135deg, #C17B63, #D99A85); }
+
+        /* Content Sections */
+        .content-section {
+            background: var(--cream);
+            padding: 50px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-header h2 {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 32px;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .section-header p {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.6;
+        }
+
+        /* Birthday Person Details */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        .details-grid .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        /* Guest Management */
+        .guest-form {
+            background: #f9f7f4;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px dashed var(--secondary);
+        }
+
+        .guest-form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .guest-count {
+            background: var(--primary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        /* Guest List */
+        .guest-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .guest-item {
+            background: white;
+            padding: 25px;
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s;
+        }
+
+        .guest-item:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .guest-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .guest-name-display {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 20px;
+            color: var(--dark);
+        }
+
+        .guest-status-badge {
+            font-size: 9px;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-attending { background: #87A878; color: white; }
+        .status-maybe { background: #C4A576; color: white; }
+        .status-declined { background: #C98686; color: white; }
+
+        .guest-info-list {
+            margin-bottom: 15px;
+        }
+
+        .guest-info-item {
+            display: flex;
+            font-size: 13px;
+            margin: 8px 0;
+            gap: 10px;
+        }
+
+        .guest-info-label {
+            font-weight: bold;
+            min-width: 60px;
+            opacity: 0.6;
+            font-size: 11px;
+        }
+
+        .guest-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .btn-small {
+            padding: 10px;
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-small:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #8B4049;
+            border-color: #8B4049;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px;
+            opacity: 0.4;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .control-panel {
+                max-width: 600px;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 32px; }
+            
+            .content-section {
+                padding: 30px 20px;
+            }
+
+            .details-grid,
+            .guest-form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .guest-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .invitation-card {
+                padding: 40px 30px;
+            }
+
+            .card-name {
+                font-size: 38px;
+            }
+        }
+
+        @media print {
+            body { background: white; }
+            .control-panel,
+            .content-section,
+            .header { display: none !important; }
+            .main-grid { grid-template-columns: 1fr; }
+            .card-display { padding: 0; }
+            .invitation-card { 
+                max-width: 100%;
+                box-shadow: none; 
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Birthday Invitation Designer</h1>
+            <p>Create Beautiful Invitations</p>
+        </div>
+
+        <!-- Main Grid: Controls + Card -->
+        <div class="main-grid">
+            <!-- Left: Control Panel -->
+            <div class="control-panel">
+                <div class="panel-section">
+                    <h3 class="panel-title">Invitation Details</h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Celebrant Name</label>
+                        <input type="text" class="form-input" id="celebrantName" value="Sidra">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Age</label>
+                        <input type="number" class="form-input" id="age" value="20">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Date & Time</label>
+                        <input type="datetime-local" class="form-input" id="dateTime" value="2026-03-18T18:00">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Venue</label>
+                        <input type="text" class="form-input" id="venue" value="Grand Hotel Ballroom">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">RSVP Contact</label>
+                        <input type="tel" class="form-input" id="phone" value="+1 (555) 123-4567">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Message</label>
+                        <textarea class="form-textarea" id="message">Your presence would make this celebration truly special.</textarea>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h3 class="panel-title">Theme</h3>
+                    <div class="theme-grid">
+                        <div class="theme-swatch theme-gold active" data-theme="gold"></div>
+                        <div class="theme-swatch theme-navy" data-theme="navy"></div>
+                        <div class="theme-swatch theme-rose" data-theme="rose"></div>
+                        <div class="theme-swatch theme-sage" data-theme="sage"></div>
+                        <div class="theme-swatch theme-burgundy" data-theme="burgundy"></div>
+                        <div class="theme-swatch theme-teal" data-theme="teal"></div>
+                        <div class="theme-swatch theme-lavender" data-theme="lavender"></div>
+                        <div class="theme-swatch theme-terracotta" data-theme="terracotta"></div>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="window.print()">Print Invitation</button>
+            </div>
+
+            <!-- Right: Card Display -->
+            <div class="card-display">
+                <div class="invitation-card" id="invitationCard">
+                    <div class="card-border"></div>
+                    <div class="card-content">
+                        <div class="card-ornament"></div>
+                        <div class="card-pre-title">You are invited to celebrate</div>
+                        <h1 class="card-name" id="displayName">Sidra</h1>
+                        <div class="card-age" id="displayAge">20<sup>th</sup> Birthday</div>
+                        
+                        <div class="card-details">
+                            <div class="card-detail">
+                                <span class="card-detail-label">When</span>
+                                <div id="displayDate">Tuesday, March 18, 2026 at 6:00 PM</div>
+                            </div>
+                            <div class="card-detail">
+                                <span class="card-detail-label">Where</span>
+                                <div id="displayVenue">Grand Hotel Ballroom</div>
+                            </div>
+                        </div>
+
+                        <div class="card-message" id="displayMessage">
+                            Your presence would make this celebration truly special.
+                        </div>
+
+                        <div class="card-ornament"></div>
+
+                        <div class="card-rsvp">
+                            <div class="card-rsvp-label">Please RSVP</div>
+                            <div class="card-rsvp-value" id="displayPhone">+1 (555) 123-4567</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Birthday Person Details -->
+        <div class="content-section">
+            <div class="section-header">
+                <h2>Birthday Person Details</h2>
+                <p>Complete Information</p>
+            </div>
+
+            <div class="details-grid">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-input" id="personName" value="Sidra Ahmed">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" id="personEmail" value="sidra@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Phone</label>
+                    <input type="tel" class="form-input" id="personPhone" value="+1 (555) 987-6543">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Date of Birth</label>
+                    <input type="date" class="form-input" id="personDOB" value="2006-03-18">
+                </div>
+
+                <div class="form-group full">
+                    <label class="form-label">Address</label>
+                    <input type="text" class="form-input" id="personAddress" value="123 Celebration Street, Happy City">
+                </div>
+
+                <div class="form-group full">
+                    <label class="form-label">Notes</label>
+                    <textarea class="form-textarea" id="personNotes">Vegetarian menu preferred.</textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Guest Management -->
+        <div class="content-section">
+            <div class="section-header">
+                <h2>Guest List <span class="guest-count" id="guestCount">0</span></h2>
+                <p>Manage Your Guests</p>
+            </div>
+
+            <!-- Add Guest Form -->
+            <div class="guest-form">
+                <div class="guest-form-grid">
+                    <div class="form-group">
+                        <label class="form-label">First Name</label>
+                        <input type="text" class="form-input" id="guestFirst">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" class="form-input" id="guestLast">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="guestEmail">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Phone</label>
+                        <input type="tel" class="form-input" id="guestPhone">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Plus One</label>
+                        <select class="form-select" id="guestPlus">
+                            <option value="0">No</option>
+                            <option value="1">+1</option>
+                            <option value="2">+2</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" id="guestStatus">
+                            <option value="maybe">Awaiting</option>
+                            <option value="attending">Attending</option>
+                            <option value="declined">Declined</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn" id="btnAddGuest" onclick="addGuest()">Add Guest</button>
+            </div>
+
+            <!-- Guest List -->
+            <div class="guest-grid" id="guestGrid">
+                <div class="empty-state">
+                    <div class="empty-icon">✦</div>
+                    <p>No guests added yet</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme data
+        const themes = {
+            gold: { primary: '#C4A576', secondary: '#D4B896' },
+            navy: { primary: '#2C3E50', secondary: '#34495E' },
+            rose: { primary: '#C98686', secondary: '#E5A8A8' },
+            sage: { primary: '#87A878', secondary: '#A5C99A' },
+            burgundy: { primary: '#8B4049', secondary: '#A05761' },
+            teal: { primary: '#4A7C7E', secondary: '#6B9FA1' },
+            lavender: { primary: '#9B8FB5', secondary: '#BDB3D3' },
+            terracotta: { primary: '#C17B63', secondary: '#D99A85' }
+        };
+
+        let currentTheme = 'gold';
+        let guests = [];
+        let editingId = null;
+
+        // Load from localStorage
+        function loadGuests() {
+            const saved = localStorage.getItem('partyGuests');
+            if (saved) {
+                guests = JSON.parse(saved);
+                renderGuests();
+            }
+        }
+
+        // Save to localStorage
+        function saveGuests() {
+            localStorage.setItem('partyGuests', JSON.stringify(guests));
+        }
+
+        // Update invitation card
+        function updateCard() {
+            const name = document.getElementById('celebrantName').value;
+            const age = document.getElementById('age').value;
+            const dateTime = document.getElementById('dateTime').value;
+            const venue = document.getElementById('venue').value;
+            const phone = document.getElementById('phone').value;
+            const message = document.getElementById('message').value;
+
+            document.getElementById('displayName').textContent = name;
+            document.getElementById('displayAge').innerHTML = age + '<sup>' + getOrdinal(age) + '</sup> Birthday';
+            document.getElementById('displayDate').textContent = formatDate(dateTime);
+            document.getElementById('displayVenue').textContent = venue;
+            document.getElementById('displayPhone').textContent = phone;
+            document.getElementById('displayMessage').textContent = message;
+        }
+
+        function getOrdinal(n) {
+            const s = ["th", "st", "nd", "rd"];
+            const v = n % 100;
+            return s[(v - 20) % 10] || s[v] || s[0];
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            }) + ' at ' + date.toLocaleTimeString('en-US', { 
+                hour: 'numeric', 
+                minute: '2-digit' 
+            });
+        }
+
+        // Add or update guest
+        function addGuest() {
+            const first = document.getElementById('guestFirst').value.trim();
+            const last = document.getElementById('guestLast').value.trim();
+            const email = document.getElementById('guestEmail').value.trim();
+            const phone = document.getElementById('guestPhone').value.trim();
+            const plus = document.getElementById('guestPlus').value;
+            const status = document.getElementById('guestStatus').value;
+
+            if (!first || !last) {
+                alert('Please enter first and last name');
+                return;
+            }
+
+            if (editingId !== null) {
+                const index = guests.findIndex(g => g.id === editingId);
+                guests[index] = { id: editingId, first, last, email, phone, plus, status };
+                editingId = null;
+                document.getElementById('btnAddGuest').textContent = 'Add Guest';
+            } else {
+                guests.push({
+                    id: Date.now(),
+                    first, last, email, phone, plus, status
+                });
+            }
+
+            saveGuests();
+            clearForm();
+            renderGuests();
+        }
+
+        function editGuest(id) {
+            const guest = guests.find(g => g.id === id);
+            if (!guest) return;
+
+            document.getElementById('guestFirst').value = guest.first;
+            document.getElementById('guestLast').value = guest.last;
+            document.getElementById('guestEmail').value = guest.email;
+            document.getElementById('guestPhone').value = guest.phone;
+            document.getElementById('guestPlus').value = guest.plus;
+            document.getElementById('guestStatus').value = guest.status;
+
+            editingId = id;
+            document.getElementById('btnAddGuest').textContent = 'Update Guest';
+
+            document.querySelector('.guest-form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function deleteGuest(id) {
+            if (confirm('Remove this guest?')) {
+                guests = guests.filter(g => g.id !== id);
+                saveGuests();
+                renderGuests();
+            }
+        }
+
+        function clearForm() {
+            document.getElementById('guestFirst').value = '';
+            document.getElementById('guestLast').value = '';
+            document.getElementById('guestEmail').value = '';
+            document.getElementById('guestPhone').value = '';
+            document.getElementById('guestPlus').value = '0';
+            document.getElementById('guestStatus').value = 'maybe';
+        }
+
+        function renderGuests() {
+            const grid = document.getElementById('guestGrid');
+            const count = document.getElementById('guestCount');
+
+            count.textContent = guests.length;
+
+            if (guests.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">✦</div>
+                        <p>No guests added yet</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = guests.map(g => {
+                const statusClass = 'status-' + g.status;
+                const statusText = g.status === 'attending' ? 'Attending' : 
+                                 g.status === 'declined' ? 'Declined' : 'Awaiting';
+
+                return `
+                    <div class="guest-item">
+                        <div class="guest-header">
+                            <div class="guest-name-display">${g.first} ${g.last}</div>
+                            <span class="guest-status-badge ${statusClass}">${statusText}</span>
+                        </div>
+                        <div class="guest-info-list">
+                            ${g.email ? `<div class="guest-info-item"><span class="guest-info-label">Email:</span> ${g.email}</div>` : ''}
+                            ${g.phone ? `<div class="guest-info-item"><span class="guest-info-label">Phone:</span> ${g.phone}</div>` : ''}
+                            ${g.plus > 0 ? `<div class="guest-info-item"><span class="guest-info-label">Plus:</span> +${g.plus}</div>` : ''}
+                        </div>
+                        <div class="guest-actions">
+                            <button class="btn-small" onclick="editGuest(${g.id})">Edit</button>
+                            <button class="btn-small btn-delete" onclick="deleteGuest(${g.id})">Delete</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Theme switching
+        document.querySelectorAll('.theme-swatch').forEach(swatch => {
+            swatch.addEventListener('click', function() {
+                document.querySelectorAll('.theme-swatch').forEach(s => s.classList.remove('active'));
+                this.classList.add('active');
+                
+                const theme = this.dataset.theme;
+                currentTheme = theme;
+                
+                const card = document.getElementById('invitationCard');
+                const colors = themes[theme];
+                
+                // Update CSS variables
+                card.style.setProperty('--primary', colors.primary);
+                card.style.setProperty('--secondary', colors.secondary);
+                
+                // Update all elements that use primary color
+                card.querySelectorAll('.card-border, .card-ornament, .card-name, .card-rsvp').forEach(el => {
+                    el.style.borderColor = colors.primary;
+                    el.style.color = colors.primary;
+                });
+            });
+        });
+
+        // Real-time updates
+        ['celebrantName', 'age', 'dateTime', 'venue', 'phone', 'message'].forEach(id => {
+            document.getElementById(id).addEventListener('input', updateCard);
+            document.getElementById(id).addEventListener('change', updateCard);
+        });
+
+        // Initialize
+        updateCard();
+        loadGuests();
+    </script>
+</body>
+</html>
